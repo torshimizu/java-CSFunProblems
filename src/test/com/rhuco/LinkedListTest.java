@@ -122,14 +122,24 @@ class LinkedListTest {
     // TODO: these are causing length errors
     @Nested
     class InsertFunctions {
+        LinkedList listToInsertOn = new LinkedList();
+        Node headNode;
 
+        @BeforeEach
+        public void insertSetUp() throws Exception {
+           headNode = new Node(data1);
+           listToInsertOn.setHead(headNode);
+        }
+
+        @AfterEach
+        public void insertTearDown() throws Exception {
+            listToInsertOn.setHead(null);
+            headNode.setNext(null);
+        }
+
+        // TODO: make this like delete where you create an arraylist
         @Test
         public void testInsert(){
-            // arrange
-            LinkedList listToInsertOn = new LinkedList();
-            Node headNode = new Node(data2);
-            listToInsertOn.setHead(headNode);
-
             Node nodeToInsert = new Node(data1);
 
             // act
@@ -150,21 +160,25 @@ class LinkedListTest {
             nodeToInsert.setNext(additionalNode);
 
             // assert
-            assertThrows(Error.class, () -> list.insert(nodeToInsert), "Cannot insert more than one node");
+            assertThrows(Error.class, () -> listToInsertOn.insert(nodeToInsert), "Cannot insert more than one node");
         }
 
-        // these are going to insert a node and change the length of master list
         @Test
         public void testInsertAscending(){
             // arrange
+            Node node2 = new Node(data2);
+            Node node3 = new Node(data3);
+            node2.setNext(node3);
+            listToInsertOn.getHead().setNext(node2);
+
             Data dataToInsert = new Data (567);
             Node nodeToInsert = new Node(dataToInsert);
 
             // act
-            list.insertAscending(nodeToInsert);
+            listToInsertOn.insertAscending(nodeToInsert);
 
             // assert
-            Data datumOfNthFromBegging = list.nthFromBeginning(2);
+            Data datumOfNthFromBegging = listToInsertOn.nthFromBeginning(2);
             assertEquals(dataToInsert, datumOfNthFromBegging); // is this a good test?
         }
 
@@ -173,9 +187,9 @@ class LinkedListTest {
             Data dataToInsert = new Data (12);
             Node nodeToInsert = new Node (dataToInsert);
 
-            list.insertAscending(nodeToInsert);
+            listToInsertOn.insertAscending(nodeToInsert);
 
-            Data headData = list.getHead().getData();
+            Data headData = listToInsertOn.getHead().getData();
             assertEquals(dataToInsert, headData);
         }
 
@@ -184,11 +198,11 @@ class LinkedListTest {
             Data dataToInsert = new Data (999);
             Node nodeToInsert = new Node (dataToInsert);
 
-            list.insertAscending(nodeToInsert);
+            listToInsertOn.insertAscending(nodeToInsert);
 
-            int count = list.length();
+            int count = listToInsertOn.length();
 
-            Data datumOfTail = list.nthFromBeginning(count - 1);
+            Data datumOfTail = listToInsertOn.nthFromBeginning(count - 1);
             assertEquals(dataToInsert, datumOfTail);
         }
 
@@ -197,7 +211,7 @@ class LinkedListTest {
             Data dataToInsert = new Data (true);
             Node nodeToInsert = new Node (dataToInsert);
 
-            assertThrows(ClassCastException.class, () -> list.insertAscending(nodeToInsert), "data must be of type int to insert ascending");
+            assertThrows(ClassCastException.class, () -> listToInsertOn.insertAscending(nodeToInsert), "data must be of type int to insert ascending");
         }
 
     }
