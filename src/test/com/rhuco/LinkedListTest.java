@@ -119,7 +119,6 @@ class LinkedListTest {
         node3.setNext(null);
     }
 
-    // TODO: these are causing length errors
     @Nested
     class InsertFunctions {
         LinkedList listToInsertOn = new LinkedList();
@@ -140,15 +139,23 @@ class LinkedListTest {
         // TODO: make this like delete where you create an arraylist
         @Test
         public void testInsert(){
+            // arrange
             Node nodeToInsert = new Node(data1);
+
+            ArrayList<Node> expectedAfterInsert = new ArrayList<>();
+            // this order is important: insert should be inserting at the *head* position
+            expectedAfterInsert.add(nodeToInsert);
+            expectedAfterInsert.add(headNode);
+
 
             // act
             int beforeLength = listToInsertOn.length();
             listToInsertOn.insert(nodeToInsert);
+            ArrayList<Node> actualAfterInsert = createArrayListFromLinkedList(listToInsertOn);
 
             // assert
             assertEquals(beforeLength + 1, listToInsertOn.length());
-            assertEquals(nodeToInsert, listToInsertOn.getHead());
+            assertEquals(expectedAfterInsert, actualAfterInsert);
 
         }
 
@@ -174,12 +181,19 @@ class LinkedListTest {
             Data dataToInsert = new Data (567);
             Node nodeToInsert = new Node(dataToInsert);
 
+            ArrayList<Node> expectedAfterInsertAscending = new ArrayList<>();
+            expectedAfterInsertAscending.add(headNode);
+            expectedAfterInsertAscending.add(node2);
+            expectedAfterInsertAscending.add(nodeToInsert);
+            expectedAfterInsertAscending.add(node3);
+
             // act
             listToInsertOn.insertAscending(nodeToInsert);
 
             // assert
-            Data datumOfNthFromBegging = listToInsertOn.nthFromBeginning(2);
-            assertEquals(dataToInsert, datumOfNthFromBegging); // is this a good test?
+            ArrayList<Node> actualAfterInsertAscending = createArrayListFromLinkedList(listToInsertOn);
+            assertEquals(expectedAfterInsertAscending, actualAfterInsertAscending);
+
         }
 
         @Test
@@ -291,13 +305,6 @@ class LinkedListTest {
         @Test
         public void testDeleteContents() {
 
-            /*
-             * delete a node
-             * create an arraylist of updated contents
-             * create an arraylist of what you should see
-             * see if the two arraylist's contents are equal or that one is missing
-             */
-
             // arrange
             ArrayList<Node> expectedAfterDeletion = new ArrayList<>();
             expectedAfterDeletion.add(node1);
@@ -313,16 +320,18 @@ class LinkedListTest {
             assertEquals(expectedAfterDeletion, actualAfterDeletion);
         }
 
-        public ArrayList<Node> createArrayListFromLinkedList(LinkedList list) {
-            ArrayList<Node> al = new ArrayList<Node>();
-            Node current = list.getHead();
 
-            while (current != null) {
-                al.add(current);
-                current = current.getNext();
-            }
+    }
 
-            return al;
+    public ArrayList<Node> createArrayListFromLinkedList(LinkedList list) {
+        ArrayList<Node> al = new ArrayList<Node>();
+        Node current = list.getHead();
+
+        while (current != null) {
+            al.add(current);
+            current = current.getNext();
         }
+
+        return al;
     }
 }
