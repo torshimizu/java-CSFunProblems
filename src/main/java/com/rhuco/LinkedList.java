@@ -159,7 +159,62 @@ public class LinkedList {
         }
 
         return;
+    }
+    
+        public void reverse() {
+        if(head == null) return;
+        if(head.getNext() == null) return;
 
+        Node previous = null;
+        Node current = head;
+
+        while(current != null) {
+            // save next that we will need to get to
+            Node temp = current.getNext();
+
+            // switch direction for current
+            current.setNext(previous);
+
+            // move to next nodes
+            previous = current;
+            current = temp;
+        }
+        this.setHead(previous);
+
+        return;
+    }
+
+    public Node getMiddleValue() {
+        Node slow = head;
+        Node fast = head;
+
+        while(fast.getNext() != null){
+            slow = slow.getNext();
+            fast = fast.getNext();
+
+            if(fast.getNext() != null){
+                fast = fast.getNext();
+            }
+        }
+
+        return slow;
+    }
+
+    // starting count from zero
+    public Node nthFromEnd(int val) {
+        Node trailing = head;
+        Node leading = head.getNext();
+
+        for (int i = 0; i < val; i++){
+            leading = leading.getNext();
+        }
+
+        while(leading != null){
+            trailing = trailing.getNext();
+            leading = leading.getNext();
+        }
+
+        return trailing;
     }
 }
 
